@@ -1,0 +1,12 @@
+{
+  "name": "docker_nginx",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"node node_modules/mocha/bin/mocha.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
+  "description": ""
+}
