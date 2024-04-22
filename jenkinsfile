@@ -18,7 +18,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                   docker.build("nginx:${env.BUILD_ID}")
+                   docker build . -t mynginx
                 }
             }
         }
