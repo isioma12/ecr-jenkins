@@ -9,7 +9,7 @@
 FROM dockerfile/ubuntu
 
 # Install Nginx.
-     nginx -v /host/path/nginx.conf:/etc/nginx/nginx.conf:ro -d nginx nginx-debug -g 'daemon off;
+      /host/path/nginx.conf:/etc/nginx/nginx.conf:ro -d nginx nginx-debug -g 'daemon off;
   
 
 # Define mountable directories.
