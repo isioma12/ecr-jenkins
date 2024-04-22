@@ -18,7 +18,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                   docker.build  "mynginx  latest"
+                   docker.build  "repos/nginx  latest"
                 }
             }
         }
