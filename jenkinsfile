@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+    environment {
+        AWS_ACCOUNT_ID="339712719975"
+        AWS_DEFAULT_REGION="us-east-1"
+        IMAGE_REPO_NAME="devoprepo"
+        IMAGE_TAG="nginx"
+        REPOSITORY_URI = "339712719975.dkr.ecr.us-east-1.amazonaws.com/devoprepo"
+    }
+   
+    stages {
+        
+         stage('Logging into AWS ECR') {
+            steps {
+                script {
+                sh """aws ecr get-login-password --region ${us-east-1} | docker login --username AWS --password-stdin ${339712719975}.dkr.ecr.${us-east-1}.amazonaws.com"""
+                }
+                 
+            }
+        }
+        
+        stage('Cloning Git') {
+            steps {
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: '339712719975', url: 'https://github.com/isioma12/ecr-jenkins.git']])
+            }
+        }
+  
+    // Building Docker image
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = nginx/nginx.conf
+        }
+      }
+    }
+   
+    // Uploading Docker images into AWS ECR
+    stage('Pushing to ECR') {
+     steps{  
+         script {
+                sh """docker tag ${DEVOPREPO}:${NGINX} ${339712719975.dkr.ecr.us-east-1.amazonaws.com/devoprepo}:$IMAGE_TAG"""
+                sh """docker push ${339712719975}.dkr.ecr.${us-east-1}.amazonaws.com/${DEVOPREPO}:${NGINX}"""
+         }
+        }
+      }
+    }
+}
