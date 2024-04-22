@@ -18,7 +18,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                   docker build . -t mynginx
+                  sh ' docker build . -t mynginx .'
                 }
             }
         }
