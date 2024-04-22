@@ -9,7 +9,6 @@
 FROM dockerfile/ubuntu
 
 # Install Nginx.
-RUN \
 --name my-nginx -v /host/path/nginx.conf:/etc/nginx/nginx.conf:ro -d nginx nginx-debug -g 'daemon off;
   
 
