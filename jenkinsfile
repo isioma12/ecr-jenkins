@@ -1,45 +1,47 @@
 pipeline {
     agent any
-
     environment {
         AWS_ACCOUNT_ID="339712719975"
         AWS_DEFAULT_REGION="us-east-1"
-        ECR_REPO_NAME = 'DEVOPREPO'
-        DOCKER_IMAGE_NAME = 'nginx-image'
+        IMAGE_REPO_NAME="devoprepo"
+        IMAGE_TAG="nginx"
+        REPOSITORY_URI = "339712719975.dkr.ecr.us-east-1.amazonaws.com/devoprepo"
     }
-
+   
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/isioma12/ecr-jenkins.git']])
-            }
-        }
-
-        stage('Build Docker Image') {
+        
+         stage('Logging into AWS ECR') {
             steps {
                 script {
-                   docker.build  "repos/nginx  latest"
+                sh """aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"""
                 }
+                 
             }
         }
-
-        stage('Scan Image') {
+        
+        stage('Cloning Git') {
             steps {
-                script {
-                    def scanResult = docker.image('nginx').withRegistry('https://339712719975.dkr.ecr.us-east-1.amazonaws.com/devoprepo').push()
-                    echo "Image scan result: ${scanResult}"
-                }
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: '339712719975', url: 'https://github.com/isioma12/ecr-jenkins.git']])
             }
         }
-
-        stage('Push to ECR') {
-            steps {
-                script {
-                    docker.withRegistry('https://339712719975.dkr.ecr.us-east-1.amazonaws.com/devoprepo', AWS_CREDENTIALS) {
-                        docker.image('NGNIX').push("${DEVOPREPO}:${env.BUILD_NUMBER}")
-                    }
-                }
-            }
+  
+    // Building Docker image
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build nginx.conf /etc/nginx/nginx.conf
         }
+      }
+    }
+   
+    // Uploading Docker images into AWS ECR
+    stage('Pushing to ECR') {
+     steps{  
+         script {
+                sh """docker tag ${DEVOPREPO}:${NGINX} ${339712719975.dkr.ecr.us-east-1.amazonaws.com/devoprepo}:$IMAGE_TAG"""
+                sh """docker push ${339712719975}.dkr.ecr.${us-east-1}.amazonaws.com/${DEVOPREPO}:${NGINX}"""
+         }
+        }
+      }
     }
 }
