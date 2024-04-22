@@ -26,7 +26,7 @@ pipeline {
         stage('Scan Image') {
             steps {
                 script {
-                    def scanResult = docker.image(NGNIX_IMAGE_NAME).withRegistry('https://339712719975.dkr.ecr.us-east-1.amazonaws.com/devoprepo').push()
+                    def scanResult = docker.image('nginx').withRegistry('https://339712719975.dkr.ecr.us-east-1.amazonaws.com/devoprepo').push()
                     echo "Image scan result: ${scanResult}"
                 }
             }
@@ -36,7 +36,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://339712719975.dkr.ecr.us-east-1.amazonaws.com/devoprepo', AWS_CREDENTIALS) {
-                        docker.image(NGNIX_IMAGE).push("${DEVOPREPO}:${env.BUILD_NUMBER}")
+                        docker.image('NGNIX').push("${DEVOPREPO}:${env.BUILD_NUMBER}")
                     }
                 }
             }
