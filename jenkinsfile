@@ -1,5 +1,4 @@
-pipeline {
-    agent any
+pipeline 
     environment {
         AWS_ACCOUNT_ID="339712719975"
         AWS_DEFAULT_REGION="us-east-1"
