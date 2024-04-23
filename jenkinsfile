@@ -29,7 +29,7 @@ pipeline {
     stage('Building image') {
       steps{
         script {
-          dockerImage = docker.build nginx /etc/nginx/nginx.conf
+          COPY --from=nginx:latest /etc/nginx/nginx.conf /nginx.conf
         }
       }
     }
