@@ -29,7 +29,7 @@ pipeline {
     stage('Building image') {
       steps{
         script {
-          COPY /app/nginx.conf /etc/nginx/conf.d/default.conf
+          COPY /app/nginx.conf /etc/nginx/conf.d
 
         }
       }
